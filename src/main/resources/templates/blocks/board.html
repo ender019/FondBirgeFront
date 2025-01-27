@@ -1,0 +1,8 @@
+<div th:fragment="board">
+    <div id="board" class="container mt-5">
+        <h1 th:text="|${data_kol}|"></h1>
+        <div th:each="el: ${data.keySet()}" class="alert alert-info mt-2">
+            <p th:text="${el} + ' ' + ${data.get(el)}"></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${title}|"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script th:inline="javascript">
+        var path = /*[[${path}]]*/ '';
+        console.log("Название страницы: " + path);
+        setInterval(function() {$('#board').load('./get/' + path); }, 5000);
+    </script>
+</head>
+<body>
+    <header th:insert="blocks/menubar :: menubar"></header>
+
+    <div id="board" class="container mt-5">
+        <h1 th:text="|${data_kol}|"></h1>
+        <div th:each="el: ${data.keySet()}" class="alert alert-info mt-2">
+            <p th:text="${el} + ' ' + ${data.get(el)}"></p>
+        </div>
+    </div>
+
+    <header th:insert="blocks/toolbar :: toolbar"></header>
+</body>
+</html>
