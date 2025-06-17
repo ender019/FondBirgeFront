@@ -1,27 +1,37 @@
 package com.finance.birge.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedHashMap;
 
 @Slf4j
 @Service
 public class RestService {
-    @Value("${services.birge.url}")
-    private String birge_url;
+    private LinkedHashMap<String, Float> moneycourse;
+    private LinkedHashMap<String, Float> cryptocourse;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    public synchronized void setCryptocourse(LinkedHashMap<String, Float> cryptocourse) {
+        this.cryptocourse = cryptocourse;
+    }
+
+    public synchronized void setMoneycourse(LinkedHashMap<String, Float> moneycourse) {
+        this.moneycourse = moneycourse;
+    }
 
     public LinkedHashMap<String,Float> getCourses(String path)
     {
-        log.info("url: {}", birge_url + path);
-        LinkedHashMap<String,Float> res = restTemplate.getForObject(birge_url+path, LinkedHashMap.class);
-        log.debug("result: {}", res);
+        log.info("Path: {}", path);
+        log.info(Thread.currentThread().getName());
+        LinkedHashMap<String, Float> res;
+        if(path.equals("money")) res = moneycourse;
+        else if(path.equals("crypto")) res = cryptocourse;
+        else {
+            res = new LinkedHashMap<>(moneycourse);
+            res.putAll(cryptocourse);
+            return res;
+        }
+        log.debug("Result: {}", res);
         return res;
     }
 }
